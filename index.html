@@ -72,30 +72,6 @@ button {
   </form>
 </main>
 <script>
-const form = document.getElementById("form");
-const chat = document.getElementById("chat");
-
-form.addEventListener("submit", function(e) {
-  e.preventDefault();
-  const input = document.getElementById("question");
-  const question = input.value.trim();
-  if (!question) return;
-
-  const msg = document.createElement("div");
-  msg.className = "message user";
-  msg.textContent = "তুমি: " + question;
-  chat.appendChild(msg);
-
-  const reply = document.createElement("div");
-  reply.className = "message";
-  reply.textContent = "Maya AI: এখনো আমার AI সংযোগ তৈরি হয়নি। পরের ধাপে সেটি যুক্ত করব।";
-  chat.appendChild(reply);
-
-  input.value = "";
-  chat.scrollTop = chat.scrollHeight;
-});
-</script>
-<script>
 const MAYA_SERVER = "https://maya-ai-server.ahalihaider963.workers.dev/";
 
 const form = document.getElementById("form");
