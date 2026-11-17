@@ -95,5 +95,21 @@ form.addEventListener("submit", function(e) {
   chat.scrollTop = chat.scrollHeight;
 });
 </script>
+<script>
+const MAYA_SERVER = "https://maya-ai-server.ahalihaider963.workers.dev/";
+
+async function askMaya(message) {
+  const response = await fetch(MAYA_SERVER, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message })
+  });
+
+  const data = await response.json();
+  return data;
+}
+</script>
 </body>
 </html>
