@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maya AI</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101827;
+  color: white;
+}
+header {
+  padding: 20px;
+  background: #17243a;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+}
+main {
+  max-width: 600px;
+  margin: 25px auto;
+  padding: 15px;
+}
+#chat {
+  height: 55vh;
+  overflow-y: auto;
+  background: #1b2940;
+  border-radius: 12px;
+  padding: 15px;
+}
+.message {
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  background: #293b56;
+  white-space: pre-wrap;
+}
+.user { background: #245b70; }
+form {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 9px;
+  border: 0;
+}
+button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 9px;
+  background: #38bdf8;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<header>✨ Maya AI</header>
+<main>
+  <h3>তোমাকে স্বাগতম!</h3>
+  <div id="chat">
+    <div class="message">Maya AI: আসসালামু আলাইকুম! আমি Maya AI। তোমাকে কীভাবে সাহায্য করতে পারি?</div>
+  </div>
+  <form id="form">
+    <input id="question" placeholder="এখানে প্রশ্ন লেখো..." required>
+    <button type="submit">Send</button>
+  </form>
+</main>
+<script>
+const form = document.getElementById("form");
+const chat = document.getElementById("chat");
+
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+  const input = document.getElementById("question");
+  const question = input.value.trim();
+  if (!question) return;
+
+  const msg = document.createElement("div");
+  msg.className = "message user";
+  msg.textContent = "তুমি: " + question;
+  chat.appendChild(msg);
+
+  const reply = document.createElement("div");
+  reply.className = "message";
+  reply.textContent = "Maya AI: এখনো আমার AI সংযোগ তৈরি হয়নি। পরের ধাপে সেটি যুক্ত করব।";
+  chat.appendChild(reply);
+
+  input.value = "";
+  chat.scrollTop = chat.scrollHeight;
+});
+</script>
+</body>
+</html>
