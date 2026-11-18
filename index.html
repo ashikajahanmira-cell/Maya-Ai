@@ -384,6 +384,83 @@ function startNewChat() {
 
 newChatBtn.addEventListener("click", startNewChat);
 sidebarNewChat.addEventListener("click", startNewChat);
+// Maya AI Chat History
+const MAYA_HISTORY_KEY = "mayaChatHistory";
+let mayaCurrentChatId = String(Date.now());
+
+function mayaGetHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(MAYA_HISTORY_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function mayaSaveHistory() {
+  const messages = [...chat.querySelectorAll(".message")].map(m => ({
+    className: m.classList.contains("user") ? "message user" : "message",
+    text: m.textContent
+  }));
+
+  if (!messages.length) return;
+
+  const firstUser = messages.find(m => m.className.includes("user"));
+  const title = firstUser
+    ? firstUser.text.replace("তুমি: ", "").slice(0, 35)
+    : "নতুন কথোপকথন";
+
+  let history = mayaGetHistory();
+  const existing = history.findIndex(item => item.id === mayaCurrentChatId);
+
+  const item = {
+    id: mayaCurrentChatId,
+    title,
+    messages
+  };
+
+  if (existing >= 0) history[existing] = item;
+  else history.unshift(item);
+
+  history = history.slice(0, 20);
+  localStorage.setItem(MAYA_HISTORY_KEY, JSON.stringify(history));
+  mayaRenderHistory();
+}
+
+function mayaRenderHistory() {
+  historyBox.innerHTML = "";
+
+  mayaGetHistory().forEach(item => {
+    const div = document.createElement("div");
+    div.className = "historyItem";
+    div.textContent = item.title;
+
+    div.addEventListener("click", () => {
+      mayaSaveHistory();
+      mayaCurrentChatId = item.id;
+      chat.innerHTML = "";
+
+      item.messages.forEach(m => {
+        const el = document.createElement("div");
+        el.className = m.className;
+        el.textContent = m.text;
+        chat.appendChild(el);
+      });
+
+      sidebar.classList.remove("open");
+    });
+
+    historyBox.appendChild(div);
+  });
+}
+
+const mayaHistoryObserver = new MutationObserver(mayaSaveHistory);
+mayaHistoryObserver.observe(chat, {
+  childList: true,
+  subtree: true,
+  characterData: true
+});
+
+mayaRenderHistory();
 </script>
 </body>
 </html>
