@@ -297,6 +297,7 @@ button {
   </div>
   <form id="form">
     <input id="question" placeholder="এখানে প্রশ্ন লেখো..." required>
+   <button type="button" id="voiceBtn">🎤</button>
     <button type="submit">Send</button>
   </form>
 </main>
@@ -463,6 +464,44 @@ mayaHistoryObserver.observe(chat, {
 });
 
 mayaRenderHistory();
+  // Maya AI Voice Input
+const mayaVoiceBtn = document.getElementById("voiceBtn");
+
+const MayaSpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (MayaSpeechRecognition) {
+  const mayaRecognition = new MayaSpeechRecognition();
+
+  mayaRecognition.lang = "bn-BD";
+  mayaRecognition.continuous = false;
+  mayaRecognition.interimResults = false;
+
+  mayaVoiceBtn.addEventListener("click", () => {
+    mayaVoiceBtn.textContent = "🔴 শুনছি...";
+    mayaRecognition.start();
+  });
+
+  mayaRecognition.onresult = (event) => {
+    input.value = event.results[0][0].transcript;
+    mayaVoiceBtn.textContent = "🎤";
+    input.focus();
+  };
+
+  mayaRecognition.onerror = () => {
+    mayaVoiceBtn.textContent = "🎤";
+    alert("মাইক্রোফোন চালু হচ্ছে না। আবার চেষ্টা করো।");
+  };
+
+  mayaRecognition.onend = () => {
+    mayaVoiceBtn.textContent = "🎤";
+  };
+
+} else {
+  mayaVoiceBtn.addEventListener("click", () => {
+    alert("তোমার ব্রাউজারে Voice Input সমর্থিত নয়। Chrome ব্যবহার করে চেষ্টা করো।");
+  });
+}
 </script>
 </body>
 </html>
