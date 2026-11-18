@@ -331,24 +331,77 @@ form.addEventListener("submit", async function(e) {
 
   try {
     const response = await fetch(MAYA_SERVER, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: question
-      })
-    });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    message: question
+  })
+});
 
-    const data = await response.json();
+if (!response.ok) {
+  const errorText = await response.text();
+  throw new Error(errorText || "AI connection failed");
+}
 
-    if (!response.ok) {
-      throw new Error(data.details || data.error || "AI connection failed");
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+
+let buffer = "";
+let answer = "";
+
+function processMayaEvent(eventText) {
+  const lines = eventText.split(/\r?\n/);
+
+  for (const line of lines) {
+    if (!line.startsWith("data:")) continue;
+
+    const jsonText = line.slice(5).trim();
+    if (!jsonText || jsonText === "[DONE]") continue;
+
+    try {
+      const data = JSON.parse(jsonText);
+      const parts = data.candidates?.[0]?.content?.parts || [];
+
+      for (const part of parts) {
+        if (part.text) {
+          answer += part.text;
+          reply.textContent = "Maya AI: " + answer;
+          chat.scrollTop = chat.scrollHeight;
+        }
+      }
+    } catch (error) {
+      console.log("Streaming data processing:", error);
     }
+  }
+}
 
-    reply.textContent = "Maya AI: " + data.answer;
-    mayaSpeak(data.answer);
+while (true) {
+  const { value, done } = await reader.read();
+  if (done) break;
 
+  buffer += decoder.decode(value, { stream: true });
+
+  const events = buffer.split(/\r?\n\r?\n/);
+  buffer = events.pop() || "";
+
+  for (const eventText of events) {
+    processMayaEvent(eventText);
+  }
+}
+
+buffer += decoder.decode();
+
+if (buffer.trim()) {
+  processMayaEvent(buffer);
+}
+
+if (!answer) {
+  throw new Error("কোনো উত্তর পাওয়া যায়নি। আবার চেষ্টা করো।");
+}
+
+mayaSpeak(answer);
   } catch (error) {
     reply.textContent = "Maya AI: দুঃখিত, সংযোগে সমস্যা হয়েছে। " + error.message;
   } finally {
