@@ -314,6 +314,36 @@ form.addEventListener("submit", async function(e) {
     chat.scrollTop = chat.scrollHeight;
   }
 });
+  const sidebar = document.getElementById("sidebar");
+const menuBtn = document.getElementById("menuBtn");
+const newChatBtn = document.getElementById("newChatBtn");
+const sidebarNewChat = document.getElementById("sidebarNewChat");
+const historyBox = document.getElementById("history");
+
+menuBtn.addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+});
+
+function startNewChat() {
+  const messages = chat.querySelectorAll(".message");
+
+  messages.forEach(message => {
+    message.remove();
+  });
+
+  const welcome = document.createElement("div");
+  welcome.className = "message";
+  welcome.textContent =
+    "Maya AI: আসসালামু আলাইকুম! নতুন কথোপকথনে স্বাগতম। কী জানতে চাও?";
+  chat.appendChild(welcome);
+
+  input.value = "";
+  sidebar.classList.remove("open");
+  input.focus();
+}
+
+newChatBtn.addEventListener("click", startNewChat);
+sidebarNewChat.addEventListener("click", startNewChat);
 </script>
 </body>
 </html>
