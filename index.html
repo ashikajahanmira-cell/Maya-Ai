@@ -177,6 +177,45 @@ button:disabled {
     max-width: 290px;
   }
 }
+    body.dark {
+  background: #121212;
+  color: #eeeeee;
+}
+
+body.dark header,
+body.dark #sidebar {
+  background: #1e1e1e;
+  color: #ffffff;
+  border-color: #383838;
+}
+
+body.dark .message {
+  background: #252525;
+  color: #ffffff;
+}
+
+body.dark .message.user {
+  background: #45366c;
+}
+
+body.dark form {
+  background: #252525;
+  border-color: #444444;
+}
+
+body.dark input {
+  background: transparent;
+  color: #ffffff;
+}
+
+body.dark .historyItem {
+  background: #333333;
+  color: #ffffff;
+}
+
+body.dark #sidebar p {
+  color: #bbbbbb;
+}
   </style>
 <head>
 <meta charset="UTF-8">
@@ -242,6 +281,7 @@ button {
   <button id="menuBtn" type="button">☰</button>
   <span>✨ Maya AI</span>
   <button id="newChatBtn" type="button">＋ New Chat</button>
+  <button id="darkModeBtn" type="button">🌙</button>
 </header>
 
 <aside id="sidebar">
