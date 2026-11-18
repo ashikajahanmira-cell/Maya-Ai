@@ -347,6 +347,7 @@ form.addEventListener("submit", async function(e) {
     }
 
     reply.textContent = "Maya AI: " + data.answer;
+    mayaSpeak(data.answer);
 
   } catch (error) {
     reply.textContent = "Maya AI: দুঃখিত, সংযোগে সমস্যা হয়েছে। " + error.message;
@@ -501,6 +502,22 @@ if (MayaSpeechRecognition) {
   mayaVoiceBtn.addEventListener("click", () => {
     alert("তোমার ব্রাউজারে Voice Input সমর্থিত নয়। Chrome ব্যবহার করে চেষ্টা করো।");
   });
+}
+  // Maya AI Voice Reply
+function mayaSpeak(text) {
+  if (!("speechSynthesis" in window)) {
+    alert("তোমার ব্রাউজারে Voice Reply সমর্থিত নয়।");
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "bn-BD";
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
 }
 </script>
 </body>
